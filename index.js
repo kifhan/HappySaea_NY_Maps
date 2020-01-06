@@ -4,14 +4,14 @@ var icons = {}
 function initMap() {
   map = new google.maps.Map(
       document.getElementById('map'),
-      {center: new google.maps.LatLng(40.756329,-73.987109), zoom: 15});
+      {center: new google.maps.LatLng(40.756329,-73.987109), zoom: 13});
 
-  function pinSymbol(color, size) {
+  function pinSymbol(color, strokeColor, size, alpha) {
     return {
       path: 'M 0,0 C -2,-20 -10,-22 -10,-30 A 10,10 0 1,1 10,-30 C 10,-22 2,-20 0,0 z',
       fillColor: color,
-      fillOpacity: 1,
-      strokeColor: '#000',
+      fillOpacity: alpha,
+      strokeColor: strokeColor,
       strokeWeight: 1,
       scale: size
     };
@@ -19,13 +19,13 @@ function initMap() {
 
   icons = {
     visible: {
-      icon: pinSymbol('orange', 0.9)
+      icon: pinSymbol('#ff7433', '#8a604e', 0.9, 1)
     },
     hidden: {
-      icon: pinSymbol('gray', 0.6)
+      icon: pinSymbol('#a2a3a3', '#595859', 0.6, 0.3)
     },
     info: {
-      icon: pinSymbol('#eeeeaa', 0.6)
+      icon: pinSymbol('#ede200', '#696747', 0.6, 0.6)
     }
   };
 
@@ -380,12 +380,14 @@ function initMap() {
         features[i].type = 'visible';
       	//features[i].marker.setMap(map);
         features[i].marker.setIcon(icons[features[i].type].icon)
-        map.setCenter(features[i].position);
+        map.panTo(features[i].position);
+        if(map.getZoom() != 15) map.setZoom(15);
       } else {
 	      //features[i].marker.setMap(null);
         features[i].marker.setIcon(icons[features[i].type].icon)
         features[i].type = 'hidden';
+        // map.setZoom(14);
       }
     }
-    setTimeout(checkVideo, 500);
+    setTimeout(checkVideo, 1000);
   }

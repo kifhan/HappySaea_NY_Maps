@@ -1,12 +1,29 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="initial-scale=1.0" />
+    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
     <link rel="stylesheet" href="index.css"/>
     <script src="index.js"></script>
+    <style>
+        body {
+            background-color: #282828;
+            /* background-color: #fffaf0; */
+        }
+        #mainContainer {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            margin: -400px 0px 0px -390px;
+        }
+    </style>
 </head>
 <body>
-<div id="ytplayer"></div>
-<div id="map"></div>
+<div id="mainContainer">
+    <div id="ytplayer"></div>
+    <div id="map"></div>
+</div>
 <!-- Replace the value of the key parameter with your own API key. -->
 <script async defer
 src="https://www.youtube.com/iframe_api">
