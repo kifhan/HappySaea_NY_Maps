@@ -350,7 +350,7 @@ function initMap() {
   function onYouTubeIframeAPIReady() {
     player = new YT.Player('ytplayer', {
       height: '405',
-      width: '720',
+      width: screen.availWidth > '720' ? '720' : screen.availWidth,
       videoId: 'VDQZQun5E6s',
       events: {
         'onReady': onPlayerReady,
