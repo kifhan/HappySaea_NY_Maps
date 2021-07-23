@@ -1,2 +1,5 @@
 # HappySaea_NY_Maps
-This is simple web app that sync map markers to Youtube video.
+
+Sync Video Timeline with Map Marker
+
+Made with Youtube API + Google Map API + React
