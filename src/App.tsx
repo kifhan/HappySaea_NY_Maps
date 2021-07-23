@@ -8,7 +8,10 @@ import {
 import './App.css';
 import PlayScreen from './Routes/PlayScreen';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faHome, faSearch } from '@fortawesome/free-solid-svg-icons'
+import {
+  // faHome, 
+  faSearch,
+} from '@fortawesome/free-solid-svg-icons'
 
 
 import CSS from 'csstype';
@@ -20,7 +23,7 @@ function App() {
   const clipWidth = (screensize.width > 720) ? "720px" : `${screensize.width}px`
 
   return (
-    <Router>
+    <Router basename={"/HappySaea_NY_Maps"}>
       <div style={styles.container}>
         <nav style={{...styles.nav, width: clipWidth}}>
           <Link to="/" style={styles.titleWrap}>
