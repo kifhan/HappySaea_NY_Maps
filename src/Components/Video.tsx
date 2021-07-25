@@ -1,5 +1,5 @@
 import React, { Ref } from "react";
-import YouTube, { YouTubeProps } from "react-youtube";
+import YouTube, { YouTubeProps, Options } from "react-youtube";
 // import Modal from "react-modal";
 
 interface Props extends YouTubeProps {
@@ -16,7 +16,7 @@ interface Props extends YouTubeProps {
   // onPlaybackQualityChange: (e: any) => void;
 }
 
-const Video = ({ videoCode, width, height, videoref, onPlay, onPause, onEnd, onStateChange }: Props) => {
+const Video = ({ videoCode, width, height, videoref, onPlay, onPause, onEnd, onStateChange, onReady }: Props) => {
   // const [modalIsOpen, setModalIsOpen] = React.useState(false);
   // let videoCode;
   // if (videoUrl) {
@@ -32,13 +32,17 @@ const Video = ({ videoCode, width, height, videoref, onPlay, onPause, onEnd, onS
   //   }
   // };
 
-  const opts = {
+  const opts: Options = {
     height: height.toString(),
     width: width.toString(),
     // height: '390',
     // width: '640',
     playerVars: {
       // autoplay: 1
+      // controls: 0,
+      listType: "user_uploads",
+      showinfo: 0,
+      rel: 0,
     },
   };
   // https://developers.google.com/youtube/player_parameters
@@ -59,7 +63,7 @@ const Video = ({ videoCode, width, height, videoref, onPlay, onPause, onEnd, onS
   //     onPlaybackQualityChange={func}    // defaults -> noop
   //     />
 
-  const handleExerciseComplete = () => console.log("Do something");
+  // const handleExerciseComplete = () => console.log("Do something");
 
   return (
     <div style={styles.container}>
@@ -70,6 +74,7 @@ const Video = ({ videoCode, width, height, videoref, onPlay, onPause, onEnd, onS
             videoId={videoCode}
             containerClassName="embed embed-youtube"
             opts={opts}
+            onReady={(e) => { if (onReady) onReady(e) }}
             onPlay={(e) => { if (onPlay) onPlay(e) }}
             onPause={(e) => { if (onPause) onPause(e) }}
             onEnd={(e) => { if (onEnd) onEnd(e) }}

@@ -23,9 +23,12 @@ function App() {
   const clipWidth = (screensize.width > 720) ? "720px" : `${screensize.width}px`
 
   return (
-    <Router basename={"/HappySaea_NY_Maps"}>
+    <Router
+      basename={(process.env.NODE_ENV === "development") ? undefined : "/HappySaea_NY_Maps"}>
+      {/* <Router basename={"/HappySaea_NY_Maps"}> */}
+      {/* <span>{process.env.NODE_ENV}</span> */}
       <div style={styles.container}>
-        <nav style={{...styles.nav, width: clipWidth}}>
+        <nav style={{ ...styles.nav, width: clipWidth }}>
           <Link to="/" style={styles.titleWrap}>
             <div className="title-font" style={styles.title}>HappySaea</div>
           </Link>
@@ -48,7 +51,7 @@ function App() {
         <Switch>
           <Route path="/search">
             {/* <About /> */}
-            <div style={{height: "100%", width: clipWidth, backgroundColor: "#FFF8E1"}}><div style={{margin: "20px", textAlign: "center"}}>search videos</div></div>
+            <div style={{ height: "100%", width: clipWidth, backgroundColor: "#FFF8E1" }}><div style={{ margin: "20px", textAlign: "center" }}>search videos</div></div>
           </Route>
           <Route path="/playscreen">
             <PlayScreen />

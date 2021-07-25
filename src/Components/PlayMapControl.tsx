@@ -28,7 +28,7 @@ export default function PlayMapControl({ markers, width, height, duration, playT
                 const tarr = value.seekto.split(":");
                 const seconds = parseInt(tarr[0]) * 60 + parseInt(tarr[1]);
                 return (
-                    <div style={{ ...styles.markers, transform: `translate(${(seconds / total) * (width - barMarginRight) + 9}px, ${height / 2}px)` }}>
+                    <div key={value.seekto} style={{ ...styles.markers, transform: `translate(${(seconds / total) * (width - barMarginRight) + 9}px, ${height / 2}px)` }}>
                         <div onClick={() => { if (onMarkerClick) onMarkerClick(value) }}
                             style={{
                                 // width: "10px", height: "10px", borderRadius: "5px", backgroundColor: "#f4b400",

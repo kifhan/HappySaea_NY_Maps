@@ -43,7 +43,7 @@ const PlayScreen = (props: Props) => {
 
     const [playTime, setPlayTime] = React.useState(0)
     // const [count, setCount] = React.useState(0)
-    const [anchoring, setAnchoring] = React.useState({ lat: 0, lng: 0, zoom: 0 })
+    const [anchoring, setAnchoring] = React.useState<{ marker?: MarkerData, lat: number, lng: number, zoom: number }>({ lat: 0, lng: 0, zoom: 0 })
     const videoref: { current?: YouTubeProps } | any = React.useRef(null)
 
     // for (var i = 0; i < data.markers.length; i++) {
@@ -75,7 +75,7 @@ const PlayScreen = (props: Props) => {
                     // map.panTo(data.markers[i].position);
                     // if (map.getZoom() != 15) map.setZoom(15);
                     console.log("this you get it? " + data.markers[i].title)
-                    setAnchoring({ lat: data.markers[i].position[0], lng: data.markers[i].position[1], zoom: 16 })
+                    setAnchoring({ lat: data.markers[i].position[0], lng: data.markers[i].position[1], zoom: 16, marker: data.markers[i] })
                 } else {
                     //data.markers[i].marker.setMap(null);
                     // data.markers[i].marker.setIcon(icons[data.markers[i].type].icon)
@@ -88,6 +88,10 @@ const PlayScreen = (props: Props) => {
 
     })
 
+    const onReady = (e: { target: any }) => {
+        console.log("video [end]: " + e.target.playerInfo.playerState);
+        videoref.current = e.target
+    }
     const onPlay = (e: { target: any }) => {
         console.log("video [play]: " + e.target.playerInfo.playerState);
     }
@@ -103,15 +107,27 @@ const PlayScreen = (props: Props) => {
         // const currentTime = e.target.getCurrentTime();
         videoref.current = e.target
     }
+
+    const onMarkerPlayClick = (marker: MarkerData) => {
+        let player = videoref.current
+        console.log("on marker play button clicke")
+        if (marker && player.playerInfo) {
+            // player.seekTo(seconds:Number, allowSeekAhead:Boolean):Void
+            const tarr = marker.seekto.split(":");
+            const seconds = parseInt(tarr[0]) * 60 + parseInt(tarr[1]);
+            player.seekTo(seconds, true);
+            player.playVideo();
+        }
+    }
     return (
         <div style={{...styles.container, width: `${clipWidth}px`}}>
             {/* <div>{Math.round(count)}</div> */}
-            <Video videoref={videoref} videoCode={data.videoId} width={clipWidth} height={405/720*clipWidth} {...{ onPlay, onPause, onEnd, onStateChange }} />
+            <Video videoref={videoref} videoCode={data.videoId} width={clipWidth} height={405/720*clipWidth} {...{ onReady, onPlay, onPause, onEnd, onStateChange }} />
             <PlayMapControl width={clipWidth} height={36} markers={data.markers} duration={data.duration} playTime={playTime}
                 onMarkerClick={(marker: MarkerData) => {
-                    setAnchoring({ lat: marker.position[0], lng: marker.position[1], zoom: 15 })
+                    setAnchoring({ lat: marker.position[0], lng: marker.position[1], zoom: 15, marker: marker })
                 }} />
-            <MapView mapCenter={data.center} height={`calc(100% - ${405/720*clipWidth}px - 36px)`} markers={data.markers} anchoring={anchoring} />
+            <MapView mapCenter={data.center} height={`calc(100% - ${405/720*clipWidth}px - 36px)`} markers={data.markers} anchoring={anchoring} onMarkerPlayClick={onMarkerPlayClick} />
         </div>
     )
 }

@@ -15,6 +15,7 @@
     "@types/node": "^12.0.0",
     "@types/react": "^17.0.0",
     "@types/react-dom": "^17.0.0",
+    "concurrently": "^6.2.0",
     "gh-pages": "^3.2.3",
     "google-map-react": "^2.1.10",
     "react": "^17.0.2",
@@ -33,6 +34,7 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "watch": "cra-build-watch",
+    "dev": "set NODE_ENV=development && concurrently --kill-others \"npm run watch\" \"npm run start\"",
     "deploy": "gh-pages -d build"
   },
   "eslintConfig": {
