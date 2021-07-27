@@ -5,9 +5,9 @@ import { YouTubeProps } from "react-youtube";
 
 import data from '../Stores/VideoData.json'
 
-import CSS from 'csstype';
 import PlayMapControl from '../Components/PlayMapControl';
 import { useWindowSize } from '../Utils/WindowSIze';
+import CSS from 'csstype';
 const css = (style: CSS.Properties) => { return style };
 
 const useAnimationFrame = (callback: any) => {

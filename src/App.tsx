@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   BrowserRouter as Router,
   Switch,
@@ -12,15 +12,35 @@ import {
   // faHome, 
   faSearch,
 } from '@fortawesome/free-solid-svg-icons'
-
+import SignInScreen from './Routes/SignInScreen';
 
 import CSS from 'csstype';
 import { useWindowSize } from './Utils/WindowSIze';
+import { dbService } from './Stores/firebase';
 const css = (style: CSS.Properties) => { return style };
 
 function App() {
   const screensize = useWindowSize()
   const clipWidth = (screensize.width > 720) ? "720px" : `${screensize.width}px`
+
+  useEffect(() => {
+    dbService.collection("videos").doc("VDQZQun5E6s").collection("markerComments").get().then((querySnapshot) => {
+      querySnapshot.forEach((doc) => {
+          console.log(`${doc.id} => ${doc.data()}`);
+      });
+  });
+    // const markercomment = {
+    //   author: "",
+    //   createdat: Date.now(),
+    //   description: "",
+    //   position: [],
+    //   seekto: "",
+    //   title: ""
+    // }
+    // dbService.collection("videos").doc("VDQZQun5E6s").collection("markerComments").add(markercomment)
+    return () => {
+    }
+  }, [])
 
   return (
     <Router
@@ -57,13 +77,15 @@ function App() {
             <PlayScreen />
           </Route>
           <Route path="/">
-            <PlayScreen />
+            {/* <PlayScreen /> */}
+            <SignInScreen />
           </Route>
         </Switch>
       </div>
     </Router>
   );
 }
+
 
 const styles = {
   container: css({

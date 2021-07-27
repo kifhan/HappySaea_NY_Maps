@@ -1,301 +1,363 @@
 {
     "videoId": "VDQZQun5E6s",
     "duration": "11:17",
-    "center": {"lat": 40.761437, "lng": -73.977617},
+    "center": {
+        "lat": 40.761437,
+        "lng": -73.977617
+    },
     "markers": [{
         "position": [40.757990, -73.985536],
         "title": "Times Square",
         "type": "info",
+        "description": "",
         "seekto": "0:22"
     }, {
         "position": [40.757231, -73.989201],
         "title": "Five guys",
         "type": "info",
+        "description": "",
         "seekto": "0:27"
     }, {
         "position": [40.7571823, -73.9894514],
         "title": "THE RIDE NYC",
         "type": "info",
+        "description": "",
         "seekto": "0:31"
     }, {
         "position": [40.760555, -73.990361],
         "title": "BareBurger",
         "type": "info",
+        "description": "",
         "seekto": "0:39"
     }, {
         "position": [40.752748, -73.977234],
         "title": "Grand Central Terminal",
         "type": "info",
+        "description": "",
         "seekto": "0:56"
     }, {
         "position": [40.753267, -73.982257],
         "title": "New York Public Library",
         "type": "info",
+        "description": "",
         "seekto": "1:08"
     }, {
         "position": [40.753003, -73.984118],
         "title": "Blue Bottle Coffee",
         "type": "info",
+        "description": "",
         "seekto": "1:16"
     }, {
         "position": [40.753798, -73.983677],
         "title": "Bryant Park",
         "type": "info",
+        "description": "",
         "seekto": "1:19"
     }, {
         "position": [40.750681, -73.986474],
         "title": "Keens Steakhouse",
         "type": "info",
+        "description": "",
         "seekto": "1:21"
     }, {
         "position": [40.761437, -73.977617],
         "title": "MoMA",
         "type": "info",
+        "description": "",
         "seekto": "1:34"
     }, {
         "position": [40.754680, -73.987023],
         "title": "Joe’s Pizza",
         "type": "info",
+        "description": "",
         "seekto": "1:37"
     }, {
         "position": [40.782981, -73.958971],
         "title": "Guggenheim Museum",
         "type": "info",
+        "description": "",
         "seekto": "1:49"
     }, {
         "position": [40.782865, -73.965334],
         "title": "Central Park",
         "type": "info",
+        "description": "",
         "seekto": "1:55"
     }, {
         "position": [40.742442, -74.006144],
         "title": "Chelsea Market",
         "type": "info",
+        "description": "",
         "seekto": "2:09"
     }, {
         "position": [40.747993, -74.004766],
         "title": "The High Line Park",
         "type": "info",
+        "description": "",
         "seekto": "2:18"
     }, {
         "position": [40.753763, -74.002151],
         "title": "Vessel",
         "type": "info",
+        "description": "",
         "seekto": "2:22"
     }, {
         "position": [40.730911, -74.000654],
         "title": "Blue Note Jazz Club",
         "type": "info",
+        "description": "",
         "seekto": "2:29"
     }, {
         "position": [40.719644, -73.989587],
         "title": "Russ & Daughters Cafe",
         "type": "info",
+        "description": "",
         "seekto": "2:43"
     }, {
         "position": [40.719846, -73.987238],
         "title": "Supermoon Bakehouse",
         "type": "info",
+        "description": "",
         "seekto": "2:49"
     }, {
         "position": [40.726433, -73.984077],
         "title": "Big Gay Ice Cream",
         "type": "info",
+        "description": "",
         "seekto": "2:58"
     }, {
         "position": [40.758740, -73.978673],
         "title": "Rockefeller Center",
         "type": "info",
+        "description": "",
         "seekto": "3:05"
     }, {
         "position": [40.761623, -73.978854],
         "title": "The Halal Guys",
         "type": "info",
+        "description": "",
         "seekto": "3:17"
     }, {
         "position": [40.702067, -74.013572],
         "title": "Staten Island Ferry",
         "type": "info",
+        "description": "",
         "seekto": "3:37"
     }, {
         "position": [40.704517, -74.010948],
         "title": "Luke’s Lobster",
         "type": "info",
+        "description": "",
         "seekto": "3:52"
     }, {
         "position": [40.703571, -73.989562],
         "title": "Dumbo - Photo point with Manhattan Bridge",
         "type": "info",
+        "description": "",
         "seekto": "4:04"
     }, {
         "position": [40.717973, -73.985119],
         "title": "Nakamura",
         "type": "info",
+        "description": "",
         "seekto": "4:11"
     }, {
         "position": [40.743268, -73.990134],
         "title": "Maman",
         "type": "info",
+        "description": "",
         "seekto": "4:24"
     }, {
         "position": [40.741062, -73.989700],
         "title": "Flatiron Building",
         "type": "info",
+        "description": "",
         "seekto": "4:31"
     }, {
         "position": [40.726137, -73.995073],
         "title": "Noho-Soho Shopping street",
         "type": "info",
+        "description": "",
         "seekto": "4:40"
     }, {
         "position": [40.721568, -73.995683],
         "title": "Lombardi’s",
         "type": "info",
+        "description": "",
         "seekto": "4:52"
     }, {
         "position": [40.754538, -73.982501],
         "title": "Gabriel Kreuther",
         "type": "info",
+        "description": "",
         "seekto": "5:13"
     }, {
         "position": [40.671207, -73.963629],
         "title": "Brooklyn Museum",
         "type": "info",
+        "description": "",
         "seekto": "5:56"
     }, {
         "position": [40.669413, -73.962375],
         "title": "Brooklyn Botanical Garden",
         "type": "info",
+        "description": "",
         "seekto": "5:59"
     }, {
         "position": [40.662915, -73.961721],
         "title": "Wendy’s",
         "type": "info",
+        "description": "",
         "seekto": "6:05"
     }, {
         "position": [40.572638, -73.978767],
         "title": "Coney Island",
         "type": "info",
+        "description": "",
         "seekto": "6:09"
     }, {
         "position": [40.703278, -74.017031],
         "title": "Battery Park",
         "type": "info",
+        "description": "",
         "seekto": "6:48"
     }, {
         "position": [40.703260, -74.017356],
         "title": "Statue Cruises",
         "type": "info",
+        "description": "",
         "seekto": "6:50"
     }, {
         "position": [40.689262, -74.044478],
         "title": "Statue of Liberty",
         "type": "info",
+        "description": "",
         "seekto": "6:57"
     }, {
         "position": [40.735886, -74.004950],
         "title": "Magnolia Bakery",
         "type": "info",
+        "description": "",
         "seekto": "7:03"
     }, {
         "position": [40.733031, -74.007255],
         "title": "Jeju Noodle Bar",
         "type": "info",
+        "description": "",
         "seekto": "7:06"
     }, {
         "position": [40.711399, -74.011147],
         "title": "The Oculus",
         "type": "info",
+        "description": "",
         "seekto": "7:15"
     }, {
         "position": [40.713344, -74.013363],
         "title": "One World Observatory",
         "type": "info",
+        "description": "",
         "seekto": "7:22"
     }, {
         "position": [40.708403, -73.957894],
         "title": "Williamsburg",
         "type": "info",
+        "description": "",
         "seekto": "7:40"
     }, {
         "position": [40.719879, -73.961240],
         "title": "Artists & Fleas Williamsburg",
         "type": "info",
+        "description": "",
         "seekto": "7:48"
     }, {
         "position": [40.760522, -73.951040],
         "title": "Roosevelt Island",
         "type": "info",
+        "description": "",
         "seekto": "8:00"
     }, {
         "position": [40.747080, -73.985019],
         "title": "Baekjeong NYC",
         "type": "info",
+        "description": "",
         "seekto": "8:16"
     }, {
         "position": [40.829645, -73.926177],
         "title": "Yankee Stadium",
         "type": "info",
+        "description": "",
         "seekto": "8:23"
     }, {
         "position": [40.828016, -73.925286],
         "title": "McDonald’s",
         "type": "info",
+        "description": "",
         "seekto": "8:31"
     }, {
         "position": [40.810018, -73.950057],
         "title": "Apollo Theater",
         "type": "info",
+        "description": "",
         "seekto": "8:35"
     }, {
         "position": [40.807110, -73.946340],
         "title": "Harlem Shake",
         "type": "info",
+        "description": "",
         "seekto": "8:44"
     }, {
         "position": [40.803103, -73.956564],
         "title": "Melba’s",
         "type": "info",
+        "description": "",
         "seekto": "8:48"
     }, {
         "position": [40.748440, -73.985664],
         "title": "Empire State Building",
         "type": "info",
+        "description": "",
         "seekto": "8:59"
     }, {
         "position": [40.864863, -73.931726],
         "title": "The Met Cloisters",
         "type": "info",
+        "description": "",
         "seekto": "9:10"
     }, {
         "position": [40.865012, -73.927866],
         "title": "Tryon Public House",
         "type": "info",
+        "description": "",
         "seekto": "9:16"
     }, {
         "position": [40.781329, -73.973990],
         "title": "American Museum of Natural History",
         "type": "info",
+        "description": "",
         "seekto": "9:52"
     }, {
         "position": [40.779445, -73.963212],
         "title": "The Metropolitan Museum of Art",
         "type": "info",
+        "description": "",
         "seekto": "10:06"
     }, {
         "position": [40.784396, -73.957872],
         "title": "Cooper Hewitt Smithsonian Design Museum",
         "type": "info",
+        "description": "",
         "seekto": "10:19"
     }, {
         "position": [40.719601, -73.960816],
         "title": "Shelter",
         "type": "info",
+        "description": "",
         "seekto": "10:27"
     }, {
         "position": [40.722199, -73.956678],
         "title": "Westlight",
         "type": "info",
+        "description": "",
         "seekto": "10:36"
     }]
 }

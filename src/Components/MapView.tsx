@@ -1,17 +1,19 @@
 import React, { useEffect, useState, useRef } from 'react'
 import {
-    GoogleMap, LoadScript, useGoogleMap, Marker, InfoWindow, StandaloneSearchBox, InfoBox,
+    GoogleMap, LoadScript, useGoogleMap, Marker, InfoBox,
     // MarkerProps
 } from '@react-google-maps/api';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlay } from '@fortawesome/free-solid-svg-icons'
+import { googleMapApi } from '../googlemap.config';
 
 export interface MarkerData {
     position: Array<any>;
     title: string;
     type: string;
     seekto: string;
+    description?: string;
 }
 
 interface Props {
@@ -24,7 +26,7 @@ interface Props {
 }
 
 const MapView = ({ mapCenter, markers, anchoring, width = "100%", height = "100%", onMarkerPlayClick }: Props) => {
-    const mapApiKey = (process.env.NODE_ENV === "development") ? process.env.REACT_APP_GOOGLE_MAP_API_KEY_DEV : process.env.REACT_APP_GOOGLE_MAP_API_KEY
+    const mapApiKey = (process.env.NODE_ENV === "development") ? googleMapApi.local : googleMapApi.web
     // console.log("map key is " + mapApiKey)
     const [anchor, setAnchor] = useState({ ...mapCenter, zoom: 11 })
     // const { lat, lng, zoom } = anchoring || {lat:0, lng:0, zoom:0}
@@ -90,7 +92,7 @@ const MapView = ({ mapCenter, markers, anchoring, width = "100%", height = "100%
                                             <img width="32px" src="https://yt3.ggpht.com/ytc/AKedOLRL6Bdx5Md5D2PRXnHCS8e8qekWx8r2UmPLRTUV=s88-c-k-c0x00ffffff-no-rj" alt="happysaea said" />
                                         </div>
                                         <div style={{ paddingLeft: 12, paddingTop: 6 }}>
-                                            <span>...</span>
+                                            <span>{infomarker.description || "...😊"}</span>
                                         </div>
                                         <div style={{ position: "absolute", right: 14, paddingTop: 8 }}>
                                             <FontAwesomeIcon onClick={() => {if(onMarkerPlayClick) onMarkerPlayClick(infomarker)} } icon={faPlay} size="1x" color="#d34836" style={{ width: "16px", height: "16px", cursor: "pointer" }} />
