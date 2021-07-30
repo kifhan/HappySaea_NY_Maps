@@ -30,9 +30,15 @@ const MapView = ({ mapCenter, markers, anchoring, width = "100%", height = "100%
     // console.log("map key is " + mapApiKey)
     const [anchor, setAnchor] = useState({ ...mapCenter, zoom: 11 })
     // const { lat, lng, zoom } = anchoring || {lat:0, lng:0, zoom:0}
-    const [infomarker, setinfomarker] = useState<MarkerData>(markers[0])
+    const [infomarker, setinfomarker] = useState<MarkerData>({position: [0,0], title: "", type: "", seekto: "00:00"})
     const googlemap = useRef<any>({})
     const infoWindow = useRef<any>({})
+
+    useEffect(() => {
+        if(markers.length) setinfomarker(markers[0])
+        return () => {
+        }
+    }, [])
 
     useEffect(() => {
         if (anchoring) setAnchor(anchoring)

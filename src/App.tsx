@@ -16,7 +16,9 @@ import SignInScreen from './Routes/SignInScreen';
 
 import CSS from 'csstype';
 import { useWindowSize } from './Utils/WindowSIze';
-import { dbService } from './Stores/firebase';
+// import { dbService, firebaseInstance as firebase } from './Stores/firebase';
+// import data from './Stores/VideoData.json'
+
 const css = (style: CSS.Properties) => { return style };
 
 function App() {
@@ -24,20 +26,34 @@ function App() {
   const clipWidth = (screensize.width > 720) ? "720px" : `${screensize.width}px`
 
   useEffect(() => {
-    dbService.collection("videos").doc("VDQZQun5E6s").collection("markerComments").get().then((querySnapshot) => {
-      querySnapshot.forEach((doc) => {
-          console.log(`${doc.id} => ${doc.data()}`);
-      });
-  });
-    // const markercomment = {
-    //   author: "",
-    //   createdat: Date.now(),
-    //   description: "",
-    //   position: [],
-    //   seekto: "",
-    //   title: ""
+    // dbService.collection("videos").doc("VDQZQun5E6s").collection("markerComments").get().then((querySnapshot) => {
+    //   querySnapshot.forEach((doc) => {
+    //     console.log(`${doc.id} => ${doc.data()}`);
+    //   });
+    // });
+    // dbService.collection("videos").doc("VDQZQun5E6s").get().then((doc) => {
+    //   console.log(`${doc.id} => ${doc.data()}`);
+    //   console.log(doc.data());
+    // })
+
+    // async function dataUpload() {
+    //   for (let i = 1; i < data.markers.length; i++) {
+    //     const marker = data.markers[i];
+    //     const markercomment = {
+    //       author: "admin",
+    //       createdat: Date.now(),
+    //       description: marker.description,
+    //       position: new firebase.firestore.GeoPoint(marker.position[0], marker.position[1]),
+    //       seekto: marker.seekto,
+    //       title: marker.title,
+    //       type: marker.type,
+    //     }
+    //     await dbService.collection("videos").doc("VDQZQun5E6s").collection("markerComments").add(markercomment)
+    //     console.log(`upload status: ${i} / ${data.markers.length}`)
+    //   }
     // }
-    // dbService.collection("videos").doc("VDQZQun5E6s").collection("markerComments").add(markercomment)
+    // dataUpload();
+
     return () => {
     }
   }, [])
@@ -77,8 +93,8 @@ function App() {
             <PlayScreen />
           </Route>
           <Route path="/">
-            {/* <PlayScreen /> */}
-            <SignInScreen />
+            <PlayScreen />
+            {/* <SignInScreen /> */}
           </Route>
         </Switch>
       </div>
