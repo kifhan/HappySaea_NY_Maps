@@ -2,8 +2,10 @@
 import React, { useEffect, useState } from 'react';
 import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
 import { firebaseInstance as firebase } from '../Stores/firebase';
+import { Button } from '@chakra-ui/react'
 
 import CSS from 'csstype';
+// import { background } from '@chakra-ui/react';
 const css = (style: CSS.Properties) => { return style };
 
 // Configure FirebaseUI.
@@ -43,7 +45,9 @@ function SignInScreen() {
   return (
     <div style={styles.container}>
       <p>Welcome {firebase.auth().currentUser?.displayName}! You are now signed-in!</p>
-      <button onClick={() => firebase.auth().signOut()}>Sign-out</button>
+      <br/>
+      <br/>
+      <Button onClick={() => firebase.auth().signOut()}>Sign-out</Button>
     </div>
   );
 }
@@ -53,7 +57,9 @@ const styles = {
       height: '100%', width: '720px',
       display: "flex",
       flexDirection: "column",
-      alignItems: "left"
+      alignItems: "left",
+      background: "#fff",
+      padding: "20px",
   }),
   content: css({
 

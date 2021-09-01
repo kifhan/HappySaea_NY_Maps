@@ -16,7 +16,7 @@ interface Props extends YouTubeProps {
   // onPlaybackQualityChange: (e: any) => void;
 }
 
-const Video = ({ videoCode, width, height, videoref, onPlay, onPause, onEnd, onStateChange, onReady }: Props) => {
+const Video = ({ videoCode, width, height, videoref, onPlay, onPause, onEnd, onStateChange, onReady, onPlaybackRateChange }: Props) => {
   // const [modalIsOpen, setModalIsOpen] = React.useState(false);
   // let videoCode;
   // if (videoUrl) {
@@ -79,6 +79,7 @@ const Video = ({ videoCode, width, height, videoref, onPlay, onPause, onEnd, onS
             onPause={(e) => { if (onPause) onPause(e) }}
             onEnd={(e) => { if (onEnd) onEnd(e) }}
             onStateChange={(e) => { if (onStateChange) onStateChange(e) }}
+            onPlaybackRateChange={(e) => { if (onPlaybackRateChange) onPlaybackRateChange(e) }}
           />
         </div>
       </div>

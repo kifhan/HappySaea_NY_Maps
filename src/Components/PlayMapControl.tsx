@@ -1,6 +1,6 @@
 import React, { ReactElement } from 'react'
 import CSS from 'csstype';
-import { MarkerData } from './MapView';
+import { MarkerData } from '../Utils/types'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faMapPin, faStreetView } from '@fortawesome/free-solid-svg-icons'
 
@@ -10,25 +10,24 @@ interface Props {
     markers: Array<MarkerData>;
     width: number;
     height: number;
-    duration: string;
+    duration: number;
     playTime: number;
     onMarkerClick?: (marker: MarkerData) => void
 }
 
 export default function PlayMapControl({ markers, width, height, duration, playTime, onMarkerClick }: Props): ReactElement {
-    const darr = duration.split(":")
-    const total = parseInt(darr[0]) * 60 + parseInt(darr[1]);
+    
     const barMarginRight = 30
+    // console.log("duration total: " + duration)
 
     return (
         <div style={{ ...styles.container, height }}>
             <div style={{position:"absolute", width: width, height: "13px", backgroundColor:"#1db954", marginTop: height - 13}}></div>
 
             {markers.map((value) => {
-                const tarr = value.seekto.split(":");
-                const seconds = parseInt(tarr[0]) * 60 + parseInt(tarr[1]);
+                const seconds : any = value.seekAsSeconds
                 return (
-                    <div key={value.seekto} style={{ ...styles.markers, transform: `translate(${(seconds / total) * (width - barMarginRight) + 9}px, ${height / 2}px)` }}>
+                    <div key={value.seekto} style={{ ...styles.markers, transform: `translate(${(seconds / duration) * (width - barMarginRight) + 9}px, ${height / 2}px)` }}>
                         <div onClick={() => { if (onMarkerClick) onMarkerClick(value) }}
                             style={{
                                 // width: "10px", height: "10px", borderRadius: "5px", backgroundColor: "#f4b400",
@@ -40,7 +39,7 @@ export default function PlayMapControl({ markers, width, height, duration, playT
                 )
             })}
 
-            <div style={{ ...styles.playDot, transform: `translate(${(playTime / total) * (width - barMarginRight)}px, ${height / 2}px)` }}>
+            <div style={{ ...styles.playDot, transform: `translate(${(playTime / duration) * (width - barMarginRight)}px, ${height / 2}px)` }}>
                 <div style={{
                     // width: "10px", height: "10px", 
                     // backgroundColor: "#e53238",
@@ -56,7 +55,7 @@ export default function PlayMapControl({ markers, width, height, duration, playT
 
 const styles = {
     container: css({
-        height: '80px', width: '100%',
+        // height: '80px', width: '100%',
         backgroundColor: "#ecfbe9"
     }),
     markers: css({

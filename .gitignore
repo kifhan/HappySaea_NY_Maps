@@ -25,4 +25,4 @@ yarn-error.log*
 
 # Api config
 firebase.config.js
-googlemap.config.js
+googleApi.config.js
