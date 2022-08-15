@@ -1,10 +1,10 @@
-import React, { ReactElement } from 'react'
-import CSS from 'csstype';
+import React, { CSSProperties, ReactElement } from 'react'
 import { MarkerData } from '../Utils/types'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faMapPin, faStreetView } from '@fortawesome/free-solid-svg-icons'
+import { Image } from '@chakra-ui/react';
 
-const css = (style: CSS.Properties) => { return style };
+const css = (style: CSSProperties) => { return style };
 
 interface Props {
     markers: Array<MarkerData>;
@@ -12,10 +12,11 @@ interface Props {
     height: number;
     duration: number;
     playTime: number;
+    playState?: number;
     onMarkerClick?: (marker: MarkerData) => void
 }
 
-export default function PlayMapControl({ markers, width, height, duration, playTime, onMarkerClick }: Props): ReactElement {
+export default function PlayMapControl({ markers, width, height, duration, playTime, playState, onMarkerClick }: Props): ReactElement {
     
     const barMarginRight = 30
     // console.log("duration total: " + duration)
@@ -27,7 +28,7 @@ export default function PlayMapControl({ markers, width, height, duration, playT
             {markers.map((value) => {
                 const seconds : any = value.seekAsSeconds
                 return (
-                    <div key={value.seekto} style={{ ...styles.markers, transform: `translate(${(seconds / duration) * (width - barMarginRight) + 9}px, ${height / 2}px)` }}>
+                    <div key={value.id} style={{ ...styles.markers, transform: `translate(${(seconds / duration) * (width - barMarginRight) + 9}px, ${height / 2}px)` }}>
                         <div onClick={() => { if (onMarkerClick) onMarkerClick(value) }}
                             style={{
                                 // width: "10px", height: "10px", borderRadius: "5px", backgroundColor: "#f4b400",
@@ -45,7 +46,8 @@ export default function PlayMapControl({ markers, width, height, duration, playT
                     // backgroundColor: "#e53238",
                     transform: `translate(5px, -9px)`
                 }}>
-                    <FontAwesomeIcon icon={faStreetView} size="2x" color="#d34836" style={{width:"24px",height:"24px"}}/>
+                    {/* <FontAwesomeIcon icon={faStreetView} size="2x" color="#d34836" style={{width:"24px",height:"24px"}}/> */}
+                    {playState === 1 ? <Image src="/images/saea01_walk_right.gif" width="24px" /> : <Image src="/images/saea01.png" width="24px" />}
                 </div>
             </div>
 

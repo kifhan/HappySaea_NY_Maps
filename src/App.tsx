@@ -1,7 +1,7 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, CSSProperties } from 'react';
 import {
-  BrowserRouter as Router,
-  Switch,
+  BrowserRouter,
+  Routes,
   Route,
   Link
 } from "react-router-dom";
@@ -14,14 +14,10 @@ import PlayScreen from './Routes/PlayScreen';
 // } from '@fortawesome/free-solid-svg-icons'
 import { Avatar, ChakraProvider } from '@chakra-ui/react'
 import SignInScreen from './Routes/SignInScreen';
-
-import CSS from 'csstype';
 import { useWindowSize } from './Utils/WindowSIze';
 import { authService } from './Stores/firebase';
 import FeedVideoList from './Routes/FeedVideoList';
 import PostVideoScreen from './Routes/PostVideoScreen';
-
-const css = (style: CSS.Properties) => { return style };
 
 function App() {
   const screensize = useWindowSize()
@@ -70,101 +66,101 @@ function App() {
 
   return (
     <ChakraProvider resetCSS>
-    <Router>
-      {/* <Router basename={"/HappySaea_NY_Maps"}> */}
-      {/* <span>{process.env.NODE_ENV}</span> */}
-      <div style={styles.container}>
-        <nav style={{ ...styles.nav, width: clipWidth }}>
-          <Link to="/" style={styles.titleWrap}>
-            <div className="title-font" style={styles.title}>HappySaea map</div>
-          </Link>
-          <ul style={styles.menuwrap}>
-            <li style={styles.menuitem}>
-              <Link to="/login">
-                {/* <FontAwesomeIcon icon={faUserCircle} size="2x" style={styles.menuicon} /> */}
-                {/* <IconButton icon={<FontAwesomeIcon icon={faUserCircle} />} aria-label="User-Login" rounded="full" fontSize="4xl" color="red" background="transparent" padding="12px"/> */}
-                <Avatar name={authService.currentUser?.displayName || undefined} src={authService.currentUser?.photoURL || undefined} margin="4px" />
-              </Link>
-            </li>
-            {/* <li style={styles.menuitem}>
+      <BrowserRouter>
+        {/* <Router basename={"/HappySaea_NY_Maps"}> */}
+        {/* <span>{process.env.NODE_ENV}</span> */}
+        <div style={styles.container}>
+          <nav style={{ ...styles.nav, width: "100%" }}>
+            <Link to="/" style={styles.titleWrap}>
+              <div className="title-font" style={styles.title}>HappySaea map</div>
+            </Link>
+            <ul style={styles.menuwrap}>
+              <li style={styles.menuitem}>
+                <Link to="/login">
+                  {/* <FontAwesomeIcon icon={faUserCircle} size="2x" style={styles.menuicon} /> */}
+                  {/* <IconButton icon={<FontAwesomeIcon icon={faUserCircle} />} aria-label="User-Login" rounded="full" fontSize="4xl" color="red" background="transparent" padding="12px"/> */}
+                  <Avatar name={authService.currentUser?.displayName || undefined} src={authService.currentUser?.photoURL || undefined} margin="12px" boxSize="32px" />
+                </Link>
+              </li>
+              {/* <li style={styles.menuitem}>
               <Link to="/search">
                 <FontAwesomeIcon icon={faSearch} size="2x" style={styles.menuicon} />
               </Link>
             </li> */}
-          </ul>
-        </nav>
+            </ul>
+          </nav>
 
-        {/* A <Switch> looks through its children <Route>s and
-          renders the first one that matches the current URL. */}
-        <Switch>
-          <Route path="/search">
-            <div style={{ height: "100%", width: clipWidth, backgroundColor: "#FFF8E1" }}><div style={{ margin: "20px", textAlign: "center" }}>search videos</div></div>
-          </Route>
-          <Route path="/video/:videoId">
-            <PlayScreen />
-          </Route>
-          <Route path="/video/">
-            <PostVideoScreen />
-          </Route>
-          <Route path="/login">
-            <SignInScreen />
-          </Route>
-          <Route path="/">
-            <FeedVideoList />
-          </Route>
-        </Switch>
-      </div>
-    </Router>
+          <Routes>
+            <Route path="/search" element={
+              <div style={{
+                height: "100%",
+                width: clipWidth,
+                backgroundColor: "#FFFFFF"
+                // backgroundColor: "#FFF8E1"
+              }}><div style={{ margin: "20px", textAlign: "center" }}>search videos</div></div>
+            }>
+            </Route>
+            <Route path="/video/:videoId" element={<PlayScreen />}>
+            </Route>
+            <Route path="/video/" element={<PostVideoScreen />}>
+            </Route>
+            <Route path="/login" element={<SignInScreen />}>
+            </Route>
+            <Route path="/" element={<FeedVideoList />}>
+            </Route>
+          </Routes>
+        </div>
+      </BrowserRouter>
     </ChakraProvider>
   );
 }
 
-
 const styles = {
-  container: css({
+  container: {
     height: '100vh', width: '100vw',
     display: "flex",
     flexDirection: "column",
-    justifyContent: "center",
+    // justifyContent: "center",
+    justifyContent: "space-between",
     alignItems: "center",
-    backgroundColor: "#8D6E63",
-  }),
-  nav: css({
-    backgroundColor: "#FBC02D",
-    width: "720px",
+    // backgroundColor: "#8D6E63",
+    backgroundColor: "#FFFFFF",
+  } as CSSProperties,
+  nav: {
+    backgroundColor: "#FFFFFF",
+    // backgroundColor: "#FBC02D",
     flexDirection: "row",
     display: "flex",
     justifyContent: "space-between"
-  }),
-  titleWrap: css({
+  } as CSSProperties,
+  titleWrap: {
     textDecoration: "none",
     alignSelf: "center",
     marginLeft: "20px",
 
-  }),
-  title: css({
+  } as CSSProperties,
+  title: {
     fontSize: "36px",
     fontWeight: "bold",
     color: "#f25022",
     textDecoration: "none"
-  }),
-  menuwrap: css({
+  } as CSSProperties,
+  menuwrap: {
     display: "flex",
 
-  }),
-  menuitem: css({
+  } as CSSProperties,
+  menuitem: {
     textDecoration: "none",
     listStyle: "none"
-  }),
-  menuicon: css({
+  } as CSSProperties,
+  menuicon: {
     textDecoration: "none",
     // fontSize: "18px",
     width: "26px",
     height: "26px",
     paddingRight: "8px",
     color: "#f25022",
-  }),
-
+  } as CSSProperties,
 };
 
 export default App;

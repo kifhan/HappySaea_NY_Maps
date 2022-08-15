@@ -1,55 +1,32 @@
-// Import FirebaseAuth and firebase.
 import React, { useEffect, useState } from 'react';
-import { authService, dbService } from '../Stores/firebase';
-import { VideoItem } from '../Components/VideoItem';
+import { authService, getVideos } from '../Stores/firebase';
+import { VideoItem, VideoItemBig } from '../Components/VideoItem';
 import { Box, IconButton, Stack, Spinner } from '@chakra-ui/react'
-import { googleApi } from '../googleApi.config';
 import { useWindowSize } from '../Utils/WindowSIze';
-import { videoData } from '../Utils/types'
-
-// import CSS from 'csstype';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Link } from "react-router-dom";
 
-// const css = (style: CSS.Properties) => { return style };
-
-
 function FeedVideoList() {
     const screensize = useWindowSize()
     const clipWidth = (screensize.width > 720) ? "720px" : `${screensize.width}px`
-    const [videoItems, setVideoItems] = useState<Array<videoData>>([]);
+    const [videoItems, setVideoItems] = useState<Array<{videoId:string}>>([]);
     // console.log(authService.currentUser?.displayName)
     // console.log(authService.currentUser?.photoURL)
 
     useEffect(() => {
-        dbService.collection("videos").get().then((querySnapshot) => {
-            (async () => {
-                const ytvideoItem = []
-                for (const doc of querySnapshot.docs) {
-                    // console.log(`${doc.id} => ${doc.data()}`);
-                    const dbvideodata = doc.data()
-
-                    // get video from youtube with the video id
-                    const videos = await fetch(`https://www.googleapis.com/youtube/v3/videos?id=${dbvideodata.videoId}&key=${googleApi.local}&part=snippet,contentDetails,statistics`)
-                    const videojson = await videos.json();
-                    // console.log(videojson);
-
-                    const channelinfo = await fetch(`https://www.googleapis.com/youtube/v3/channels?id=${videojson.items[0].snippet.channelId}&key=${googleApi.local}&part=snippet,contentDetails,statistics`)
-                    const channeljson = await channelinfo.json();
-
-                    ytvideoItem.push({
-                        videoId: dbvideodata.videoId,
-                        title: videojson.items[0].snippet.title,
-                        description: videojson.items[0].snippet.description,
-                        thumbnail: videojson.items[0].snippet.thumbnails.medium.url,
-                        author: videojson.items[0].snippet.channelTitle,
-                        authorThumbnail: channeljson.items[0].snippet.thumbnails.default.url,
-                    })
-                }
-                setVideoItems(ytvideoItem);
-            })()
-        }).catch((error) => {
+        getVideos().then((videoList) => {
+            let ytvideoItem = []
+            for (const doc of videoList) {
+                const dbvideodata = doc
+                ytvideoItem.push({
+                    videoId: dbvideodata.videoId,
+                    createdAt: dbvideodata.createdAt,
+                })
+            }
+            // console.log(ytvideoItem)
+            setVideoItems(ytvideoItem);
+        }).catch((error:any) => {
             console.log(error);
         });
         return () => { }
@@ -64,15 +41,17 @@ function FeedVideoList() {
             p="10px"
             width={clipWidth}
             height="100%"
-            backgroundColor="#eee"
+            backgroundColor="#fff"
         >
             <Box
                 width="100%"
-                position="absolute" bottom="0" left="0" right="0"
-                display="flex" justifyContent="center" alignItems="center" paddingBottom="24px"
+                // height="100%"
+                position="fixed" 
+                bottom="0"
+                display="flex" justifyContent="flex-end" alignItems="flex-end" paddingBottom="24px"
                 zIndex="9999"
             >
-                {authService.currentUser && <Box width={clipWidth} paddingLeft="24px">
+                {authService.currentUser && <Box width="100%" paddingLeft="24px">
                     <Link to="/video">
                         <IconButton icon={<FontAwesomeIcon icon={faPlus} />} aria-label="Post" rounded="full" size="lg" color="white" background="red.500"
                             _hover={{ background: "red.700" }} _active={{ background: "red" }} />
@@ -81,7 +60,10 @@ function FeedVideoList() {
             </Box>
             <Stack spacing="18px">
                 {videoItems.length ? videoItems.map((videoItem) => {
-                    return <VideoItem key={videoItem.videoId} {...videoItem} />;
+                    if (screensize.width > 720)
+                        return <VideoItem key={videoItem.videoId} {...videoItem} />;
+                    else
+                        return <VideoItemBig key={videoItem.videoId} {...videoItem} />;
                 }) : <Box width={clipWidth} display="flex" justifyContent="center" alignItems="center" padding="24px 0">
                     <Spinner
                         thickness="4px"
@@ -91,21 +73,10 @@ function FeedVideoList() {
                         size="xl"
                     />
                 </Box>}
+                <Box height="64px"></Box>
             </Stack>
         </Box>
     );
 }
-
-// const styles = {
-//     // container: css({
-//     //     height: '100%', width: '720px',
-//     //     display: "flex",
-//     //     flexDirection: "column",
-//     //     alignItems: "left"
-//     // }),
-//     content: css({
-
-//     })
-// };
 
 export default FeedVideoList;

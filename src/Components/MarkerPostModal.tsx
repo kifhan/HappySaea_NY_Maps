@@ -12,7 +12,7 @@ interface PropType {
     },
     playtime: number,
     icons: MarkerIconType[];
-    onSubmit: (title: string, description: string, type: MarkerIconType) => void
+    onSubmit: (title: string, description: string, type: MarkerIconType, imgurl: string) => void
     onButtonHover: () => void
     onButtonHoverOut: () => void
 }
@@ -22,6 +22,7 @@ export const MarkerPostModal = ({ position, playtime, icons, onSubmit, onButtonH
     const titleInputRef = useRef<any>()
     const descInputRef = useRef<any>()
     const typeSelectRef = useRef<any>()
+    const imgurlRef = useRef<any>()
     const [errorMessage, setErrorMessage] = useState<any>(null)
 
     return (
@@ -55,6 +56,10 @@ export const MarkerPostModal = ({ position, playtime, icons, onSubmit, onButtonH
                             <Input ref={descInputRef} placeholder="Description" />
                         </FormControl>
                         <FormControl>
+                            <FormLabel>Image Url</FormLabel>
+                            <Input ref={imgurlRef} placeholder="Image Url" />
+                        </FormControl>
+                        <FormControl>
                             <FormLabel>Select Marker's Type</FormLabel>
                             <Select ref={typeSelectRef} defaultValue="info">
                                 {icons.map((icon, i) => (<option key={icon} value={icon}>{icon}</option>))}
@@ -69,7 +74,7 @@ export const MarkerPostModal = ({ position, playtime, icons, onSubmit, onButtonH
                     <ModalFooter>
                         <Button colorScheme="blue" mr={3} onClick={() => {
                             if (titleInputRef.current.value) {
-                                onSubmit(titleInputRef.current.value, descInputRef.current.value, typeSelectRef.current.value)
+                                onSubmit(titleInputRef.current.value, descInputRef.current.value, typeSelectRef.current.value, imgurlRef.current.value)
                                 onClose()
                             } else {
                                 setErrorMessage("Please fill in all fields")

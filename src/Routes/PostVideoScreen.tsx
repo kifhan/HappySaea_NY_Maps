@@ -1,6 +1,6 @@
 // Import FirebaseAuth and firebase.
-import React, { useEffect, useRef, useState } from 'react';
-import { authService, dbService, firebaseInstance as firebase } from '../Stores/firebase';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { authService, createVideo } from '../Stores/firebase';
 import {
     Box,
     Button,
@@ -15,13 +15,11 @@ import { googleApi } from '../googleApi.config';
 import { useWindowSize } from '../Utils/WindowSIze';
 // import { videoData } from '../Utils/types'
 
-import CSS from 'csstype';
 import MapSearchBox from '../Components/MapSearchBox';
 import { VideoItemSmall } from '../Components/VideoItem';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import moment from 'moment';
-const css = (style: CSS.Properties) => { return style };
-
+import { GeoPoint, Timestamp } from 'firebase/firestore/lite';
 
 function PostVideoScreen() {
     const screensize = useWindowSize()
@@ -34,7 +32,7 @@ function PostVideoScreen() {
     const [mapCenter, setmapCenter] = useState({ lat: 0, lng: 0 })
     const [targetplace, settargetplace] = useState<any>(null)
     const [errorMessage, setErrorMessage] = useState<any>(null)
-    let history = useHistory();
+    let navigate = useNavigate();
 
     useEffect(() => {
         if (videoId)
@@ -62,14 +60,14 @@ function PostVideoScreen() {
         return () => { }
     }, [videoId]);
 
-    const _uploadPost = () => {
+    const _uploadPost = useCallback(() => {
         setErrorMessage(null)
         setpostUploading(true)
 
         if (videoItem && (mapCenter.lat !== 0 && mapCenter.lng !== 0)) {
-            dbService.collection("videos").doc(videoItem.videoId).set({
+            createVideo(videoItem.videoId, {
                 videoId: videoItem.videoId,
-                center: new firebase.firestore.GeoPoint(mapCenter.lat, mapCenter.lng),
+                center: new GeoPoint(mapCenter.lat, mapCenter.lng),
                 duration: videoItem.duration,
                 uid: authService.currentUser?.uid,
                 title: videoItem.title,
@@ -78,20 +76,20 @@ function PostVideoScreen() {
                 author: videoItem.author,
                 channelId: videoItem.channelId,
                 authorThumbnail: videoItem.authorThumbnail,
-                createdAt: firebase.firestore.Timestamp.now(),
+                createdAt: Timestamp.now(),
             }).then(() => {
-                setpostUploading(false)
-                history.push("/")
+                navigate("/")
             }).catch((err) => {
                 setErrorMessage(err.message)
                 console.log(err);
+            }).finally(() => {
                 setpostUploading(false)
-            })
+            });
         } else {
             setErrorMessage("Please set the place and video.")
             setpostUploading(false)
         }
-    }
+    }, [videoItem, mapCenter, navigate]);
 
     return (
         <Box
@@ -130,7 +128,10 @@ function PostVideoScreen() {
                             </Button>
                         </Box>
                     </Box>
-                    <Box paddingTop="8px">{videoItem && <VideoItemSmall {...videoItem} />}</Box>
+                    <Box paddingTop="8px">{videoItem && (<>
+                        <Text>preview:</Text>
+                        <VideoItemSmall {...videoItem} />
+                    </>)}</Box>
                     {targetplace ?
                         (<Box width="100%" >
                             <Text height="30px" overflow="hidden" textOverflow="clip">{targetplace.name} @: {targetplace.formatted_address}</Text>
@@ -150,7 +151,13 @@ function PostVideoScreen() {
                     }}
                     onMapCenterChanged={(center) => {
                         if (!(center.lat === mapCenter.lat && center.lng === mapCenter.lng)) {
-                            setmapCenter(center)
+                            // FirebaseError: Longitude must be a number between -180 and 180.
+                            if (center.lng > 180) {
+                                center.lng = (center.lng + 180) % 360 - 180
+                            } else if (center.lng < -180) {
+                                center.lng = (center.lng - 180) % 360 + 180
+                            }
+                            setmapCenter({ lat: center.lat, lng: center.lng })
                         }
                     }}
                 />
@@ -163,17 +170,5 @@ function PostVideoScreen() {
         </Box>
     );
 }
-
-const styles = {
-    // container: css({
-    //     height: '100%', width: '720px',
-    //     display: "flex",
-    //     flexDirection: "column",
-    //     alignItems: "left"
-    // }),
-    content: css({
-
-    })
-};
 
 export default PostVideoScreen;

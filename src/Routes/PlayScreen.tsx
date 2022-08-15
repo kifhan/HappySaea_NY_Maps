@@ -1,17 +1,32 @@
-import React, { useEffect, useState, useRef } from 'react'
+import React, { useEffect, useState, useRef, CSSProperties } from 'react'
 import MapView from '../Components/MapView'
 import { MarkerData } from '../Utils/types'
 import Video from '../Components/Video'
 import { YouTubeProps } from "react-youtube";
 import PlayMapControl from '../Components/PlayMapControl';
 import { useWindowSize } from '../Utils/WindowSIze';
-import CSS from 'csstype';
-import { authService, dbService, firebaseInstance as firebase } from '../Stores/firebase';
-import { useHistory, useParams } from 'react-router-dom';
+import { authService, createMarker, deleteMarker, deleteVideo, getMarkers, getVideo, updateMarker, updateVideo } from '../Stores/firebase';
+import { useNavigate, useParams } from 'react-router-dom';
 import moment from 'moment';
 import { Box } from '@chakra-ui/react';
+import { GeoPoint } from 'firebase/firestore/lite';
 
-const css = (style: CSS.Properties) => { return style };
+const css = (style: CSSProperties) => { return style };
+
+function videoStateToString(state:number) {
+    switch (state) {
+        case -1:
+            return "loading"
+        case 0:
+            return "ended"
+        case 1:
+            return "playing"
+        case 2:
+            return "paused"
+        case 3:
+            return "ready"
+    }
+}// -1: load, 0: end, 1: play, 2: pause, 3: ready
 
 const useAnimationFrame = (callback: any) => {
     // Use useRef for mutable variables that we want to persist
@@ -36,14 +51,14 @@ const useAnimationFrame = (callback: any) => {
     }, []); // Make sure the effect runs only once
 }
 
-interface Props {
+// interface Props {
+// }
 
-}
-
-const PlayScreen = (props: Props) => {
+const PlayScreen = () => {
     let { videoId } = useParams<any>();
     const screensize = useWindowSize()
-    const clipWidth = (screensize.width > 720) ? 720 : screensize.width
+    const isWideView = (screensize.height / screensize.width) < (3 / 4);
+    const clipWidth = isWideView ? screensize.width : ((screensize.width > 720) ? 720 : screensize.width);
 
     const [locationCenter, setlocationCenter] = useState({ lat: 0, lng: 0 })
     const [mapmarkers, setMarkers] = useState<MarkerData[]>([])
@@ -57,16 +72,20 @@ const PlayScreen = (props: Props) => {
     const [duration, setDuration] = useState(0)
     const [playTime, setPlayTime] = React.useState(0)
     const [videodbData, setVideodbData] = useState<any>({})
+    const [videoState, setVideoState] = React.useState(0)
 
-    let history = useHistory();
+    let navigate = useNavigate();
 
     useEffect(() => {
         // console.log("use params", videoId)
-        dbService.collection(`/videos/${videoId}/markerComments`).get().then((querySnapshot) => {
+        // dbService.collection(`/videos/${videoId}/markerComments`).get().then((querySnapshot:any) => {
+        getMarkers(videoId).then((querySnapshot) => {
             const tmarkers: Array<MarkerData> = []
             querySnapshot.forEach((doc) => {
-                // console.log(`${doc.id} => ${doc.data()}`);
-                const tdata = doc.data()
+                // console.log(`marker: ${doc.id} => ${doc}`);
+                // console.log(doc);
+                // const tdata = doc.data()
+                const tdata = doc
                 tmarkers.push({
                     id: doc.id,
                     position: [tdata.position.latitude, tdata.position.longitude],
@@ -74,6 +93,7 @@ const PlayScreen = (props: Props) => {
                     type: tdata.type,
                     seekto: tdata.seekto,
                     description: tdata.description,
+                    imgurl: tdata.imgurl,
                     uid: tdata.uid,
                 })
             });
@@ -88,10 +108,10 @@ const PlayScreen = (props: Props) => {
             // console.log("markers being set. lenght: " + tmarkers.length)
             setMarkers(tmarkers)
         });
-        dbService.collection("videos").doc(videoId).get().then((doc) => {
-            //   console.log(`${doc.id} => ${doc.data()}`);
-            const tdata = doc.data()
-            if (tdata) {
+        // dbService.collection("videos").doc(videoId).get().then((doc:any) => {
+        getVideo(videoId).then((doc) => {
+            if (doc) {
+                const tdata = doc
                 setVideodbData(tdata)
                 setlocationCenter({ lat: tdata.center.latitude, lng: tdata.center.longitude })
                 const darr = moment.duration(tdata.duration.split(':').length === 2 ? `00:${tdata.duration}` : tdata.duration)
@@ -145,7 +165,10 @@ const PlayScreen = (props: Props) => {
         // console.log("video [end]: " + e.target.playerInfo.playerState);
     }
     const onStateChange = (e: { target: any }) => {
-        console.log("video state: " + e.target.playerInfo.playerState); // -1: load, 0: end, 1: play, 2: pause, 3: ready
+        const strState = videoStateToString(e.target.playerInfo.playerState) // -1: load, 0: end, 1: play, 2: pause, 3: ready
+        console.log("video state: " + strState);
+        setVideoState(e.target.playerInfo.playerState);
+
         videoref.current = e.target
         // const duration = e.target.getDuration();
         let player = videoref.current
@@ -176,16 +199,25 @@ const PlayScreen = (props: Props) => {
                 uid: authService.currentUser?.uid,
                 createdat: Date.now(),
                 description: marker.description,
-                position: new firebase.firestore.GeoPoint(marker.position[0], marker.position[1]),
+                position: new GeoPoint(marker.position[0], marker.position[1]),
                 seekto: marker.seekto,
+                imgurl: marker.imgurl,
                 title: marker.title,
                 type: marker.type,
             }
-            dbService.collection("videos").doc(videoId).collection("markerComments").add(markercomment).then((doc) => {
+            // dbService.collection("videos").doc(videoId).collection("markerComments").add(markercomment).then((doc:any) => {
+            createMarker(videoId, markercomment).then((doc) => {
                 console.log("marker added")
                 marker.id = doc.id
-                setMarkers([...mapmarkers, marker])
-            }).catch((error) => {
+                if (marker.seekto) marker.seekAsSeconds = moment.duration(marker.seekto.split(':').length === 2 ? `00:${marker.seekto}` : marker.seekto).asSeconds()
+                const tmarkers = [...mapmarkers, marker]
+                tmarkers.sort((a, b) => {
+                    const asec = a.seekAsSeconds || 0
+                    const bsec = b.seekAsSeconds || 0
+                    return asec - bsec
+                })
+                setMarkers(tmarkers)
+            }).catch((error:any) => {
                 console.log(error)
             })
         }
@@ -193,20 +225,22 @@ const PlayScreen = (props: Props) => {
 
     const onEditMarker = (marker: MarkerData) => {
         if (authService.currentUser) {
-            // console.log(marker)
+            console.log(marker)
             const markercomment = {
                 uid: marker.uid,
                 createdat: Date.now(),
                 description: marker.description,
-                position: new firebase.firestore.GeoPoint(marker.position[0], marker.position[1]),
+                position: new GeoPoint(marker.position[0], marker.position[1]),
                 seekto: marker.seekto,
+                imgurl: marker.imgurl,
                 title: marker.title,
                 type: marker.type,
             }
-            dbService.collection("videos").doc(videoId).collection("markerComments").doc(marker.id).update(markercomment).then((doc) => {
+            // dbService.collection("videos").doc(videoId).collection("markerComments").doc(marker.id).update(markercomment).then((doc:any) => {
+            updateMarker(videoId, marker.id, markercomment).then((doc) => {
                 console.log("marker updated")
                 setMarkers([...mapmarkers.filter((m) => m.id !== marker.id), marker])
-            }).catch((error) => {
+            }).catch((error:any) => {
                 console.log(error)
             })
         }
@@ -215,22 +249,24 @@ const PlayScreen = (props: Props) => {
     const onEditVideoItem = (data: any) => {
         // console.log("on edit video item")
         // console.log(data)
-        dbService.collection("videos").doc(videoId).update({
-            center: new firebase.firestore.GeoPoint(data.position[0], data.position[1]),
+        // dbService.collection("videos").doc(videoId).update({
+        updateVideo(videoId, {
+            center: new GeoPoint(data.position[0], data.position[1]),
         }).then(() => {
             console.log("video item updated")
-        }).catch((error) => {
+        }).catch((error:any) => {
             console.log(error)
         })
     }
 
     const onRemoveVideoItem = () => {
         // console.log("on remove video item")
-        history.push("/")
-        dbService.collection("videos").doc(videoId).delete().then(() => {
+        navigate("/")
+        // dbService.collection("videos").doc(videoId).delete().then(() => {
+        deleteVideo(videoId).then(() => {
             console.log("video deleted")
-            history.push("/")
-        }).catch((error) => {
+            navigate("/")
+        }).catch((error:any) => {
             console.log(error)
         })
     }
@@ -238,27 +274,29 @@ const PlayScreen = (props: Props) => {
     const onRemoveMarker = (marker: MarkerData) => {
         // console.log("on remove marker")
         // console.log(marker)
-        dbService.collection("videos").doc(videoId).collection("markerComments").doc(marker.id).delete().then((doc) => {
+        // dbService.collection("videos").doc(videoId).collection("markerComments").doc(marker.id).delete().then((doc:any) => {
+        deleteMarker(videoId, marker.id).then(() => {
             console.log("marker deleted")
             setMarkers([...mapmarkers.filter((m) => m.id !== marker.id)])
-        }).catch((error) => {
+        }).catch((error:any) => {
             console.log(error)
         })
     }
 
-    return (
+    if(!isWideView) return (
         <div style={{ ...styles.container, width: `${clipWidth}px` }}>
             {/* <div>{Math.round(count)}</div> */}
-            <Box width={clipWidth} height={405 / 720 * clipWidth} background="#444">
+            {videoId && <Box width={clipWidth} height={405 / 720 * clipWidth} background="#444">
                 <Video videoref={videoref} videoCode={videoId} width={clipWidth} height={405 / 720 * clipWidth} {...{ onReady, onPlay, onPause, onEnd, onStateChange, onPlaybackRateChange }} />
-            </Box>
+            </Box>}
             <Box width={clipWidth} height="36px" background="#eee">
-                {duration && <PlayMapControl width={clipWidth} height={36} markers={mapmarkers.filter((marker) => marker.type === "info")} duration={duration} playTime={playTime}
+                {duration && <PlayMapControl width={clipWidth} height={36} markers={mapmarkers.filter((marker) => marker.type === "info")} 
+                duration={duration} playTime={playTime} playState={videoState}
                     onMarkerClick={(marker: MarkerData) => {
                         setAnchoring({ lat: marker.position[0], lng: marker.position[1], zoom: 15, marker: marker })
                     }} />}
             </Box>
-            {locationCenter && <MapView
+            {(locationCenter && videoId) && <MapView
                 videoId={videoId}
                 userId={authService.currentUser ? authService.currentUser.uid : ""}
                 isUserOwner={authService.currentUser && authService.currentUser.uid === videodbData.uid ? true : false}
@@ -271,6 +309,37 @@ const PlayScreen = (props: Props) => {
                 onRemoveVideoItem={onRemoveVideoItem}
                 onRemoveMarker={onRemoveMarker}
             />}
+        </div>
+    )
+    else return (
+        <div style={{ ...styles.container, width: `${clipWidth}px`, flexDirection: "row" }}>
+            <Box width={clipWidth / 2} height={screensize.height - 57} background="#444">
+                {videoId && <Video videoref={videoref} videoCode={videoId} width={clipWidth / 2} height={405 / 720 * (clipWidth / 2)} {...{ onReady, onPlay, onPause, onEnd, onStateChange, onPlaybackRateChange }} />}
+                <Box width={clipWidth / 2} height="36px" background="#eee">
+                    {duration && <PlayMapControl width={clipWidth / 2} height={36} markers={mapmarkers.filter((marker) => marker.type === "info")} 
+                    duration={duration} playTime={playTime} playState={videoState}
+                        onMarkerClick={(marker: MarkerData) => {
+                            setAnchoring({ lat: marker.position[0], lng: marker.position[1], zoom: 15, marker: marker })
+                        }} />}
+                </Box>
+            </Box>
+            <Box width={clipWidth / 2} height={screensize.height - 57} background="#444">
+                {(locationCenter && videoId) && <MapView
+                    videoId={videoId}
+                    userId={authService.currentUser ? authService.currentUser.uid : ""}
+                    isUserOwner={authService.currentUser && authService.currentUser.uid === videodbData.uid ? true : false}
+                    mapCenter={locationCenter}
+                    width={`${clipWidth / 2}px`}
+                    height="100%"
+                    markers={mapmarkers} anchoring={anchoring} playTime={playTime}
+                    onMarkerPlayClick={onMarkerPlayClick}
+                    onPostNewMarker={onPostNewMarker}
+                    onEditMarker={onEditMarker}
+                    onEditVideoItem={onEditVideoItem}
+                    onRemoveVideoItem={onRemoveVideoItem}
+                    onRemoveMarker={onRemoveMarker}
+                />}
+            </Box>
         </div>
     )
 }

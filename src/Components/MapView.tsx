@@ -141,13 +141,14 @@ const MapView = ({ userId, videoId, isUserOwner, mapCenter, markers, anchoring, 
                         }}
                         playtime={playTime}
                         icons={Object.keys(icons) as MarkerIconType[]}
-                        onSubmit={(title, description, type) => {
+                        onSubmit={(title, description, type, imgurl) => {
                             let markerPlayTime: any = moment.duration(playTime, "seconds")
                             markerPlayTime = (markerPlayTime.hours() ? markerPlayTime.hours() + ":" : "") + markerPlayTime.minutes() + ":" + markerPlayTime.seconds()
                             onPostNewMarker({
                                 position: [currentMapCenter.lat, currentMapCenter.lng],
                                 title,
                                 description,
+                                imgurl,
                                 seekto: markerPlayTime,
                                 type: type,
                                 uid: userId
@@ -225,7 +226,7 @@ const MapView = ({ userId, videoId, isUserOwner, mapCenter, markers, anchoring, 
                                 <MarkerEditModal
                                     marker={infomarker}
                                     icons={Object.keys(icons) as MarkerIconType[]}
-                                    onSubmit={(marker, title, description, type) => {
+                                    onSubmit={(marker, title, description, type, imgurl) => {
                                         onEditMarker({
                                             id: marker.id,
                                             uid: marker.uid,
@@ -234,6 +235,7 @@ const MapView = ({ userId, videoId, isUserOwner, mapCenter, markers, anchoring, 
                                             type: type,
                                             title,
                                             description,
+                                            imgurl
                                         })
                                     }} onRemove={onRemoveMarker} />
                             </div>}
@@ -245,6 +247,7 @@ const MapView = ({ userId, videoId, isUserOwner, mapCenter, markers, anchoring, 
                                             <img width="32px" src="https://yt3.ggpht.com/ytc/AKedOLRL6Bdx5Md5D2PRXnHCS8e8qekWx8r2UmPLRTUV=s88-c-k-c0x00ffffff-no-rj" alt="happysaea said" />
                                         </div> */}
                                 <div style={{ paddingLeft: 12, paddingTop: 6 }}>
+                                    {infomarker.imgurl && <img width="220px" src={infomarker.imgurl} alt="marker content" />}
                                     <span>{infomarker.description || "_"}</span>
                                 </div>
                                 <div style={{ position: "absolute", right: 14, paddingTop: 8 }}>
@@ -323,8 +326,10 @@ const Anchor = ({ lat, lng, zoom }: AnchorProps) => {
     const googleMap = useGoogleMap()
     useEffect(() => {
         setTimeout(() => {
-            if (lat && lng) googleMap.panTo({ lat, lng })
-            if (zoom) googleMap.setZoom(zoom)
+            if(googleMap) {
+                if (lat && lng) googleMap.panTo({ lat, lng })
+                if (zoom) googleMap.setZoom(zoom)
+            }
         }, 100);
     }, [googleMap, lat, lng, zoom])
     return (<></>)

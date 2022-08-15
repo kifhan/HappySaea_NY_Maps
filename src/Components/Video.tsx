@@ -1,5 +1,5 @@
 import React, { Ref } from "react";
-import YouTube, { YouTubeProps, Options } from "react-youtube";
+import YouTube, { YouTubeProps } from "react-youtube";
 // import Modal from "react-modal";
 
 interface Props extends YouTubeProps {
@@ -32,7 +32,7 @@ const Video = ({ videoCode, width, height, videoref, onPlay, onPause, onEnd, onS
   //   }
   // };
 
-  const opts: Options = {
+  const opts: any = {
     height: height.toString(),
     width: width.toString(),
     // height: '390',
@@ -72,7 +72,8 @@ const Video = ({ videoCode, width, height, videoref, onPlay, onPause, onEnd, onS
           <YouTube
             ref={videoref}
             videoId={videoCode}
-            containerClassName="embed embed-youtube"
+            // containerClassName="embed embed-youtube"
+            iframeClassName="embed embed-youtube"
             opts={opts}
             onReady={(e) => { if (onReady) onReady(e) }}
             onPlay={(e) => { if (onPlay) onPlay(e) }}

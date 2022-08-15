@@ -7,7 +7,7 @@ import { MarkerData, MarkerIconType } from '../Utils/types'
 interface PropType {
     marker: MarkerData;
     icons: MarkerIconType[];
-    onSubmit: (marker: MarkerData, title: string, description: string, type: MarkerIconType) => void
+    onSubmit: (marker: MarkerData, title: string, description: string, type: MarkerIconType, imgurl: string) => void
     onRemove?: (marker: MarkerData) => void
 }
 export const MarkerEditModal = ({ marker, icons, onSubmit, onRemove }: PropType) => {
@@ -16,6 +16,7 @@ export const MarkerEditModal = ({ marker, icons, onSubmit, onRemove }: PropType)
     const titleInputRef = useRef<any>()
     const descInputRef = useRef<any>()
     const typeSelectRef = useRef<any>()
+    const imgurlRef = useRef<any>()
     const [errorMessage, setErrorMessage] = useState<any>(null)
 
     return (
@@ -48,6 +49,10 @@ export const MarkerEditModal = ({ marker, icons, onSubmit, onRemove }: PropType)
                             <Input ref={descInputRef} placeholder="Description" defaultValue={marker.description} />
                         </FormControl>
                         <FormControl>
+                            <FormLabel>Image Url</FormLabel>
+                            <Input ref={imgurlRef} placeholder="Image Url" defaultValue={marker.imgurl} />
+                        </FormControl>
+                        <FormControl>
                             <FormLabel>Select Marker's Type</FormLabel>
                             <Select ref={typeSelectRef} defaultValue={marker.type}>
                                 {icons.map((icon, i) => (<option key={icon} value={icon}>{icon}</option>))}
@@ -67,7 +72,7 @@ export const MarkerEditModal = ({ marker, icons, onSubmit, onRemove }: PropType)
                             }} />
                         <Button colorScheme="blue" mr={3} onClick={() => {
                             if (titleInputRef.current.value) {
-                                onSubmit(marker, titleInputRef.current.value, descInputRef.current.value, typeSelectRef.current.value)
+                                onSubmit(marker, titleInputRef.current.value, descInputRef.current.value, typeSelectRef.current.value, imgurlRef.current.value)
                                 onClose()
                             } else {
                                 setErrorMessage("Please fill in all fields")

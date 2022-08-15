@@ -1,8 +1,8 @@
-import React, { useRef, useState } from 'react'
+import React, { } from 'react'
 import { useDisclosure, Box, Text, IconButton, Button, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, ModalFooter, FormControl, FormLabel, FormErrorMessage, Input } from '@chakra-ui/react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCog, faTrash } from '@fortawesome/free-solid-svg-icons'
-import markersvg from '../marker.svg';
+// import markersvg from '../marker.svg';
 
 interface PropType {
     position: {

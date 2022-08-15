@@ -5,29 +5,17 @@ service cloud.firestore {
       return request.auth != null;
     }
     match /videos/{video} {
-
-      function getRole() {
-        return get(/databases/$(database)/documents/profiles/$(request.auth.uid)).role;
-      }
-
-      function isOneOfRoles(array) {
-        return isSignedIn() && (getRole() in array);
-      }
-
       allow read;
-      allow create: if isOneOfRoles(resource, ['owner', 'writer']);
-      allow update, delete: if resource.uid == request.auth.uid;
+      allow create, update, delete: if isSignedIn();
 
       match /markerComments/{comment} {
         allow read;
-        allow create: if isSignedIn();
-        allow update, delete: if resource.uid == request.auth.uid;
+        allow create, update, delete: if isSignedIn();
       }
     }
     match /profiles/{profile} {
       allow read: if request.auth != null;
-      allow create: if isSignedIn();
-      allow update, delete: if resource.uid == request.auth.uid;
+      allow create, update, delete: if isSignedIn();
     }
   }
 }
